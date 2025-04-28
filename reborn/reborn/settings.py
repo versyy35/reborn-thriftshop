@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'rebornApp',
 ]
 
+AUTH_USER_MODEL = 'rebornApp.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
