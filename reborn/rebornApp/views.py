@@ -6,7 +6,7 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, Buyer, Seller
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, ItemForm
-
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def home(request):
@@ -34,3 +34,7 @@ def create_listing(request):
     else:
         form = ItemForm()
     return render(request, 'seller/create_listing.html', {'form': form})
+
+@login_required
+def profile_view(request):
+    return render(request, 'profile.html')

@@ -1,0 +1,227 @@
+/* landingPage.css */
+
+/* General page styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9f7f4;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* Landing page container */
+.landing-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Header section */
+.landing-header {
+    text-align: center;
+    margin-bottom: 70px;
+    animation: fadeIn 1s ease-out;
+}
+
+.landing-header h1 {
+    font-size: 56px;
+    font-weight: 800;
+    color: #2a6049;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.tagline {
+    font-size: 20px;
+    color: #5d7366;
+    font-style: italic;
+    letter-spacing: 1px;
+}
+
+/* Main content area */
+.landing-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+}
+
+/* Description section */
+.landing-description {
+    max-width: 800px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.landing-description h2 {
+    font-size: 32px;
+    color: #2a6049;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+.landing-description h2:after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 25%;
+    width: 50%;
+    height: 3px;
+    background-color: #c4d7b2;
+}
+
+.landing-description p {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #555;
+}
+
+/* Auth options cards section */
+.auth-options {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    width: 100%;
+    max-width: 1000px;
+}
+
+.auth-card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 40px 30px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    text-align: center;
+    border: 1px solid #eaeaea;
+}
+
+.auth-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.auth-card h3 {
+    color: #2a6049;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.auth-card p {
+    margin-bottom: 30px;
+    color: #666;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+/* Button styles */
+.btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #2a6049;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #1e4835;
+    box-shadow: 0 6px 15px rgba(42, 96, 73, 0.3);
+    transform: translateY(-3px);
+}
+
+.btn-secondary {
+    background-color: #5d7366;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #4a5c52;
+    box-shadow: 0 6px 15px rgba(93, 115, 102, 0.3);
+    transform: translateY(-3px);
+}
+
+/* Footer section */
+.landing-footer {
+    margin-top: 80px;
+    text-align: center;
+    color: #888;
+    font-size: 15px;
+    padding: 20px 0;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .landing-header h1 {
+        font-size: 42px;
+    }
+    
+    .tagline {
+        font-size: 18px;
+    }
+    
+    .landing-description h2 {
+        font-size: 28px;
+    }
+    
+    .landing-description p {
+        font-size: 16px;
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .auth-options {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .auth-card {
+        max-width: 90%;
+    }
+    
+    .landing-header {
+        margin-bottom: 50px;
+    }
+    
+    .landing-header h1 {
+        font-size: 36px;
+    }
+    
+    .landing-container {
+        padding: 40px 15px;
+    }
+}

@@ -3,6 +3,10 @@
 
 {% block title %}Register | Reborn{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
 {% block auth_content %}
 <div class="auth-form">
     <!-- Logo -->
@@ -44,7 +48,7 @@
         
         <!-- Role Selection -->
         <div class="form-group role-select">
-            <label>I want to:</label>
+            <label>I want to be a:</label>
             {{ form.role }}  <!-- Replaced manual select with form field -->
         </div>
 
@@ -56,4 +60,8 @@
         Already have an account? <a href="{% url 'login' %}">Log In</a>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/auth.js' %}"></script>
 {% endblock %}

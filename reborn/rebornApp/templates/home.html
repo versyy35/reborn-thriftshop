@@ -1,5 +1,42 @@
-{% extends "base.html" %} {%block title%} Home {% endblock %}
+{% extends 'base.html' %}
+{% load static %}
 
-{% block content %}
-<p>Welcome to the Reborn Thrift Shop!</p>
+{% block title %}Reborn - Second Hand Clothing{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/landingPage.css' %}">
+{% endblock %}
+
+{% block auth_content %}
+<div class="landing-container">
+    <div class="landing-header">
+        <h1>Reborn</h1>
+        <p class="tagline">Give your clothes a second life</p>
+    </div>
+
+    <div class="landing-content">
+        <div class="landing-description">
+            <h2>Welcome to Reborn</h2>
+            <p>Discover preloved fashion treasures at affordable prices. Our curated collection of second-hand clothing helps you refresh your wardrobe while reducing environmental impact.</p>
+        </div>
+
+        <div class="auth-options">
+            <div class="auth-card">
+                <h3>Join Our Community</h3>
+                <p>Create an account to start shopping!</p>
+                <a href="{% url 'register' %}" class="btn btn-primary">Register Now</a>
+            </div>
+            
+            <div class="auth-card">
+                <h3>Already a Member?</h3>
+                <p>Sign in to your account to access your dashboard, view past orders, and continue shopping.</p>
+                <a href="{% url 'login' %}" class="btn btn-secondary">Log In</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="landing-footer">
+        <p>Reborn © {% now "Y" %} | Sustainable Fashion For Everyone</p>
+    </div>
+</div>
 {% endblock %}
