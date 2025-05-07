@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Register | Reborn{% endblock %}
+
+{% block auth_content %}
+<div class="auth-form">
+    <!-- Logo -->
+    <img src="{% static 'images/logo.png' %}" class="auth-logo" alt="Reborn Logo">
+    
+    <!-- Error Messages -->
+    {% if form.errors %}
+    <div class="alert alert-error">
+        {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+                {{ error|escape }}<br>  <!-- Added escape filter for security -->
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Registration Form -->
+    <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+        
+        <!-- Username Field -->
+        <div class="form-group">
+            {{ form.username }}  <!-- Replaced manual input with form field -->
+        </div>
+        
+        <!-- Email Field -->
+        <div class="form-group">
+            {{ form.email }}  <!-- Replaced manual input with form field -->
+        </div>
+        
+        <!-- Password Fields -->
+        <div class="form-group">
+            {{ form.password1 }}  <!-- Replaced manual input with form field -->
+        </div>
+        
+        <div class="form-group">
+            {{ form.password2 }}  <!-- Replaced manual input with form field -->
+        </div>
+        
+        <!-- Role Selection -->
+        <div class="form-group role-select">
+            <label>I want to:</label>
+            {{ form.role }}  <!-- Replaced manual select with form field -->
+        </div>
+
+        <button type="submit" class="auth-btn">Create Account</button>
+    </form>
+
+    <!-- Links -->
+    <div class="auth-links">
+        Already have an account? <a href="{% url 'login' %}">Log In</a>
+    </div>
+</div>
+{% endblock %}
