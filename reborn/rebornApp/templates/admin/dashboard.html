@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - Reborn{% endblock %}
+
+{% block auth_content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h1 class="admin-title">Admin Dashboard</h1>
+        <p class="admin-subtitle">Manage users, products, and settings</p>
+    </div>
+    
+    <div class="admin-menu">
+        <h2 class="menu-title">Admin Functions</h2>
+        <ul>
+            <li><a href="{% url 'user_management' %}">User Management</a></li>
+            <li><a href="#">Item Approval</a></li>
+            <li><a href="#">Category Management</a></li>
+            <li><a href="#">Reports</a></li>
+        </ul>
+    </div>
+    
+    <div class="admin-content">
+        <h2 class="menu-title">Dashboard Overview</h2>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number">{{ users_count }}</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">{{ items_count }}</div>
+                <div class="stat-label">Total Items</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">{{ pending_items_count }}</div>
+                <div class="stat-label">Pending Approvals</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">{{ orders_count }}</div>
+                <div class="stat-label">Completed Orders</div>
+            </div>
+        </div>
+        
+        <p>Welcome to the admin dashboard. Use the menu above to navigate to different administrative functions.</p>
+    </div>
+</div>
+{% endblock %}

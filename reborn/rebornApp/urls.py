@@ -31,5 +31,11 @@ urlpatterns = [
          ), 
          name='password_reset_complete'),
     path('profile/', views.profile_view, name='profile'),
+
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+
+    path('admin/users/', views.user_management, name='user_management'),
+    
+    path('admin/users/<int:user_id>/toggle-status/', views.toggle_user_status, name='toggle_user_status'),
 ]
 
