@@ -1,0 +1,9 @@
+<h2>Your Cart</h2>
+
+<ul>
+    {% for cart_item in cart_items %}
+        <li>{{ cart_item.item.name }} - {{ cart_item.quantity }} - ${{ cart_item.item.price }}</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'checkout' %}">Proceed to Checkout</a>

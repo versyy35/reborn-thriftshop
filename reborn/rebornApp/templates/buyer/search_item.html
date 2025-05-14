@@ -1,0 +1,13 @@
+<form method="get" action="{% url 'search_item' %}">
+    <input type="text" name="q" placeholder="Search for items">
+    <button type="submit">Search</button>
+</form>
+
+<ul>
+    {% for item in items %}
+        <li>
+            <a href="{% url 'view_item' item.id %}">{{ item.name }}</a>
+            - ${{ item.price }}
+        </li>
+    {% endfor %}
+</ul>
