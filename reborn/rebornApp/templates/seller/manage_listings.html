@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Listings</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Your Listings</h2>
+        <ul>
+            {% for item in items %}
+                <li>
+                    <h3>{{ item.title }}</h3>
+                    <p>${{ item.price }}</p>
+                    <a href="{% url 'edit_item' item.id %}">Edit</a> |
+                    <a href="{% url 'delete_item' item.id %}">Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

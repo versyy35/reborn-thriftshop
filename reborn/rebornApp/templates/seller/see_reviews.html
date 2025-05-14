@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Reviews</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Your Reviews</h2>
+        <ul>
+            {% for review in reviews %}
+                <li>
+                    Rating: {{ review.rating }}<br>
+                    "{{ review.comment }}" - by {{ review.reviewer.username }} on {{ review.date_posted }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
