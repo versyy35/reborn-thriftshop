@@ -50,9 +50,9 @@ def profile_view(request):
         if user.role == 'admin':
             return redirect('admin_dashboard')  # this is the name of your admin dashboard path
         elif user.role == 'seller':
-            return redirect('home')  # or seller_dashboard if defined
+            return redirect('seller_dashboard')  # or seller_dashboard if defined
         elif user.role == 'buyer':
-            return redirect('home')  # or buyer_dashboard if defined
+            return redirect('buyer_dashboard')  # or buyer_dashboard if defined
 
     return redirect('login')  # fallback just in case
 
@@ -123,3 +123,30 @@ def user_management(request):
         'users': users,
         'search_query': search_query
     })
+
+def is_seller(user):
+    return hasattr(user, 'is_seller') and user.is_seller  # Adjust this if using profile
+
+@user_passes_test(is_seller)
+def seller_dashboard(request):
+    """Seller dashboard view with statistics for logged-in seller"""
+    # Get the seller profile associated with the user
+    try:
+        seller_profile = request.user.seller_profile
+        # Filter items and orders by the seller profile
+        seller_items = Item.objects.filter(seller=seller_profile)
+        #seller_orders = Order.objects.filter(item__seller=seller_profile).distinct()  # Assumes Order has ForeignKey to Item
+        #seller_orders = Order.objects.filter(items__seller=seller_profile).distinct()
+        seller_orders = Order.objects.filter(items__item__seller=seller_profile).distinct()
+
+        context = {
+            'items_count': seller_items.count(),
+            'pending_items_count': seller_items.filter(status='pending').count(),
+            'orders_count': seller_orders.count(),
+        }
+
+        return render(request, 'seller/dashboard.html', context)
+    except AttributeError:
+        # Handle case where user doesn't have a seller profile
+        messages.error(request, "You don't have a seller profile. Please contact admin.")
+        return redirect('home')
