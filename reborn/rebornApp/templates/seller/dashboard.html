@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard | Reborn Thrift Shop</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .dashboard {
+            background: white;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .welcome-box {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background: #f9f9f9;
+            border-radius: 5px;
+            padding: 15px;
+            width: 30%;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Reborn Thrift Shop</h1>
+        <p>Seller Dashboard</p>
+    </div>
+    
+    <div class="container">
+        <div class="dashboard">
+            <div class="welcome-box">
+                <h2>Welcome, {{ request.user.username }}!</h2>
+                <p>You are successfully logged in as a seller. Here's your dashboard overview.</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <h3><a href="index.html">Active Listings</a></h3>
+                    <div class="stat-value">12</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Pending Orders</h3>
+                    <div class="stat-value">3</div>
+                </div>
+                <div class="stat-box">
+                    <h3>Total Sales</h3>
+                    <div class="stat-value">$240</div>
+                </div>
+            </div>
+            
+            <div class="recent-activity">
+                <h3>Recent Activity</h3>
+                <p>No recent activities to display. Check back later!</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

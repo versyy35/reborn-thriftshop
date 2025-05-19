@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Login | Reborn{% endblock %}
+
+{% block auth_content %}
+<div class="auth-form">
+    <!-- Logo -->
+    <img src="{% static 'images/logo.png' %}" class="auth-logo" alt="Reborn Logo">
+    
+    <!-- Error Messages -->
+    {% if form.errors %}
+    <div class="alert alert-error">
+        Invalid username or password. Please try again.
+    </div>
+    {% endif %}
+
+    <!-- Login Form -->
+    <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <input type="text" name="username" placeholder="Username" required autofocus>
+        </div>
+        
+        <div class="form-group">
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+        
+        <button type="submit" class="auth-btn">Log In</button>
+        
+        <input type="hidden" name="next" value="{{ next }}">
+    </form>
+
+    <!-- Links -->
+    <div class="auth-links">
+        <a href="{% url 'register' %}">Create New Account</a> • 
+        <a href="{% url 'password_reset' %}">Forgot Password?</a>
+    </div>
+</div>
+{% endblock %}
