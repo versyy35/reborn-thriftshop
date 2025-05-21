@@ -160,55 +160,18 @@ def listing_page(request):
 
     return render(request, 'seller/listing-page.html', {'items': items})
 
-def is_buyer(user):
-    return hasattr(user, 'buyer_profile')
-
-@user_passes_test(is_buyer)
-def buyer_dashboard(request):
-    """Buyer dashboard view with statistics for logged-in buyer"""
-    try:
-        buyer_profile = request.user.buyer_profile
-        buyer_orders = Order.objects.filter(buyer=buyer_profile).distinct()
-
-        total_spent = sum(order.total for order in buyer_orders)
-
-        context = {
-            'orders_count': buyer_orders.count(),
-            'total_spent': total_spent,
-            'recent_orders': buyer_orders.order_by('-date')[:5], 
-        }
-
-        return render(request, 'buyer/dashboard.html', context)
-
-    except AttributeError:
-        messages.error(request, "You don't have a buyer profile. Please contact admin.")
-        return redirect('home')
-    
 @login_required
-def edit_profile_view(request):
-     if request.method == 'POST':
-        return redirect('buyer_dashboard')
-     return render(request, 'edit_profile.html')
+def dashboard_view(request):
+    return render(request, 'dashboard.html')
 
 @login_required
-def view_orders_view(request):
-      return render(request, 'orders.html')
+def profile_view(request):
+    return render(request, 'profile.html')
 
+@login_required
+def orders_view(request):
+    return render(request, 'orders.html')
+
+@login_required
 def cart_view(request):
-    user = request.user
-    cart_items = CartItem.objects.filter(user=user)
-    total = sum(item.product.price * item.quantity for item in cart_items)
-
-    context = {
-        'cart_items': cart_items,
-        'cart_total': total,
-    }
-    return render(request, 'cart.html', context)
-
-def add_to_cart(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    cart_item, created = CartItem.objects.get_or_create(user=request.user, product=product)
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
-    return redirect('cart_view')
+    return render(request, 'cart.html')
