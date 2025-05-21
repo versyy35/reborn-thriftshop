@@ -158,3 +158,8 @@ def listing_page(request):
     items = Item.objects.filter(seller=seller_profile)
 
     return render(request, 'seller/listing-page.html', {'items': items})
+
+@login_required
+def buyer_dashboard(request):
+    orders = Order.objects.filter(email=request.user.email)  
+    return render(request, 'buyer-dashboard.html', {'orders': orders})

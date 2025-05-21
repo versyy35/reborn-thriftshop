@@ -41,5 +41,7 @@ urlpatterns = [
     path('seller/dashboard/', views.seller_dashboard, name='seller_dashboard'),
 
     path('seller/listing-page/', views.listing_page, name='listing_page'),
+
+    path('dashboard/', views.buyer_dashboard, name='dashboard'),
 ]
 
