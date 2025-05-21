@@ -1,15 +1,10 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<div class="container mx-auto p-6">
-    <h2 class="text-2xl font-bold mb-4">Edit Profile</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <!-- Example fields -->
-        <label>Email:</label><br>
-        <input type="email" name="email" class="border p-2 mb-4 w-full"><br>
-        <label>Phone:</label><br>
-        <input type="text" name="phone" class="border p-2 mb-4 w-full"><br>
-        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Save Changes</button>
-    </form>
-</div>
+<h2>Edit Profile</h2>
+<form method="post">
+    {% csrf_token %}
+    <!-- Add form fields here -->
+    <button type="submit">Save</button>
+</form>
 {% endblock %}
