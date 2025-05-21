@@ -5,20 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reborn-Thriftshop | Buyer Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
     <div class="min-h-screen flex flex-col">
-        <!-- Navigation (reused from index.html) -->
+        <!-- Navigation -->
         <nav class="bg-green-700 text-white py-4 px-6 shadow-md">
             <div class="container mx-auto flex justify-between items-center">
-                <a href="index.html" class="text-2xl font-bold">Reborn-Thriftshop</a>
+                <a href="{% url 'home' %}" class="text-2xl font-bold">Reborn-Thriftshop</a>
                 <div class="hidden md:flex space-x-6">
-                    <a href="index.html" class="hover:text-green-200 transition">Home</a>
-                    <a href="index.html#products-container" class="hover:text-green-200 transition">Shop</a>
-                    <a href="index.html#about" class="hover:text-green-200 transition">About</a>
-                    <a href="index.html#contact" class="hover:text-green-200 transition">Contact</a>
-                    <a href="#" class="hover:text-green-200 transition">My Account</a>
+                    <a href="{% url 'home' %}" class="hover:text-green-200 transition">Home</a>
+                    <a href="{% url 'home' %}#products-container" class="hover:text-green-200 transition">Shop</a>
+                    <a href="{% url 'home' %}#about" class="hover:text-green-200 transition">About</a>
+                    <a href="{% url 'home' %}#contact" class="hover:text-green-200 transition">Contact</a>
+                    <a href="{% url 'buyer_dashboard' %}" class="hover:text-green-200 transition">My Account</a>
                 </div>
                 <div class="flex items-center space-x-4">
                     <div class="relative">
@@ -38,11 +38,11 @@
             </div>
             <div id="mobile-menu" class="hidden md:hidden mt-4 pt-4 border-t border-green-600">
                 <div class="flex flex-col space-y-3 px-2">
-                    <a href="index.html" class="hover:text-green-200 transition py-2">Home</a>
-                    <a href="index.html#products-container" class="hover:text-green-200 transition py-2">Shop</a>
-                    <a href="index.html#about" class="hover:text-green-200 transition py-2">About</a>
-                    <a href="index.html#contact" class="hover:text-green-200 transition py-2">Contact</a>
-                    <a href="#" class="hover:text-green-200 transition py-2">My Account</a>
+                    <a href="{% url 'home' %}" class="hover:text-green-200 transition py-2">Home</a>
+                    <a href="{% url 'home' %}#products-container" class="hover:text-green-200 transition py-2">Shop</a>
+                    <a href="{% url 'home' %}#about" class="hover:text-green-200 transition py-2">About</a>
+                    <a href="{% url 'home' %}#contact" class="hover:text-green-200 transition py-2">Contact</a>
+                    <a href="{% url 'buyer_dashboard' %}" class="hover:text-green-200 transition py-2">My Account</a>
                 </div>
             </div>
         </nav>
@@ -51,25 +51,25 @@
         <main class="flex-grow container mx-auto px-6 py-8">
             <h2 class="text-2xl font-bold text-green-800 mb-6">Your Dashboard</h2>
             <div class="bg-white rounded shadow p-6">
-                <h3 class="text-lg font-semibold text-green-800 mb-4">Welcome, !</h3>
+                <h3 class="text-lg font-semibold text-green-800 mb-4">Welcome, {{ request.user.first_name }}!</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <h4 class="font-medium text-green-700 mb-2">Account Details</h4>
-                        <p class="text-gray-600">Email: user@example.com</p>
-                        <p class="text-gray-600">Phone: (+60) 12-345-6789</p>
-                        <button class="mt-3 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Edit Profile</button>
+                        <p class="text-gray-600">Email: {{ request.user.email }}</p>
+                        <p class="text-gray-600">Phone: {{ request.user.profile.phone_number }}</p>
+                        <a href="{% url 'edit_profile' %}" class="mt-3 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Edit Profile</a>
                     </div>
                     <div>
                         <h4 class="font-medium text-green-700 mb-2">Recent Orders</h4>
                         <p class="text-gray-600">Order #RB-12345 - Placed on May 20, 2025</p>
                         <p class="text-gray-600">Order #RB-12346 - Placed on May 15, 2025</p>
-                        <button class="mt-3 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">View All Orders</button>
+                        <a href="{% url 'view_orders' %}" class="mt-3 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">View All Orders</a>
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- Footer (reused from index.html) -->
+        <!-- Footer -->
         <footer class="bg-green-800 text-white py-6">
             <div class="container mx-auto px-6">
                 <div class="flex flex-col md:flex-row justify-between">
@@ -91,7 +91,6 @@
         </footer>
     </div>
 
-    <!-- Reuse the same JavaScript for cart functionality -->
-    <script src="js/script.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>

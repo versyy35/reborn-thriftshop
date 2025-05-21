@@ -45,6 +45,11 @@ urlpatterns = [
     path('dashboard/', views.buyer_dashboard, name='dashboard'),
 
     path('buyer/dashboard/', views.buyer_dashboard, name='buyer_dashboard'),
+    
+    path('edit-profile/', views.edit_profile_view, name='edit_profile'),
 
+    path('orders/', views.view_orders_view, name='view_orders'),
+
+    path('', views.home, name='home'),
 ]
 

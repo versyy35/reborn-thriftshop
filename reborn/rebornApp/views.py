@@ -16,9 +16,6 @@ from django.urls import path
 from . import views  
 
 
-
-
-# Create your views here.
 def home(request):
     return render(request, 'home.html') 
 
@@ -185,3 +182,13 @@ def buyer_dashboard(request):
     except AttributeError:
         messages.error(request, "You don't have a buyer profile. Please contact admin.")
         return redirect('home')
+    
+@login_required
+def edit_profile_view(request):
+     if request.method == 'POST':
+        return redirect('buyer_dashboard')
+     return render(request, 'edit_profile.html')
+
+@login_required
+def view_orders_view(request):
+      return render(request, 'orders.html')
