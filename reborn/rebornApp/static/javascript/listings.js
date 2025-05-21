@@ -30,34 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const imageDataInput = document.getElementById('imageData');
     const deleteListingIdInput = document.getElementById('deleteListingId');
     
-    // Sample data if localStorage is empty
-    const sampleListings = [
-        {
-            id: '1',
-            title: 'Modern Apartment',
-            price: 1200,
-            description: 'Beautiful modern apartment in the heart of the city with great amenities.',
-            image: createSVGImage('#4f46e5', 'home'),
-            createdAt: new Date('2023-05-15').getTime()
-        },
-        {
-            id: '2',
-            title: 'Vintage Car',
-            price: 25000,
-            description: 'Restored vintage car in excellent condition. Low mileage and well maintained.',
-            image: createSVGImage('#ef4444', 'car'),
-            createdAt: new Date('2023-06-20').getTime()
-        },
-        {
-            id: '3',
-            title: 'Professional Camera',
-            price: 899,
-            description: 'High-end professional camera with multiple lenses and accessories included.',
-            image: createSVGImage('#0ea5e9', 'camera'),
-            createdAt: new Date('2023-07-10').getTime()
-        }
-    ];
-    
     // Initialize listings from localStorage or use sample data
     let listings = JSON.parse(localStorage.getItem('listings')) || [];
     if (listings.length === 0) {
@@ -105,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     'background-color: #e5e7eb';
                 
                 listingCard.innerHTML = `
-                    <div class="h-48 image-preview" style="${imageStyle}"></div>
+                    <div class="h-64 image-preview" style="${imageStyle}"></div>
                     <div class="p-4">
                         <div class="flex justify-between items-start">
                             <h3 class="text-lg font-semibold text-gray-900 mb-1">${listing.title}</h3>

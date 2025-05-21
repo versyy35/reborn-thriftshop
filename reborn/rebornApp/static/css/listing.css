@@ -17,12 +17,12 @@ body {
 }
 
 .btn-primary {
-    background-color: #4f46e5;
+    background-color: #68bdc9;
     transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
-    background-color: #4338ca;
+    background-color: #68bdc9;
 }
 
 .btn-danger {
