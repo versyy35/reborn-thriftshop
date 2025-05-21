@@ -39,5 +39,7 @@ urlpatterns = [
     path('admin/users/<int:user_id>/toggle-status/', views.toggle_user_status, name='toggle_user_status'),
 
     path('seller/dashboard/', views.seller_dashboard, name='seller_dashboard'),
+
+    path('seller/listing-page/', views.listing_page, name='listing_page'),
 ]
 

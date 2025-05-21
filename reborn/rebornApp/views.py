@@ -150,3 +150,11 @@ def seller_dashboard(request):
         # Handle case where user doesn't have a seller profile
         messages.error(request, "You don't have a seller profile. Please contact admin.")
         return redirect('home')
+    
+@user_passes_test(is_seller)
+def listing_page(request):
+    """Page for sellers to view and manage their listings"""
+    seller_profile = request.user.seller_profile
+    items = Item.objects.filter(seller=seller_profile)
+
+    return render(request, 'seller/listing-page.html', {'items': items})

@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +8,10 @@
     <title>My Listings</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="C:\Users\Home\Desktop\Belinda\MMU\Degree\Degree Y2 Sem 3\Software Design\Project\reborn-thriftshop\reborn\rebornApp\migrations\static\css\styles.css">
+    {% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/listing.css' %}">
+    {% endblock %}
+    
 </head>
 <body>
     <div class="min-h-screen">
@@ -157,6 +162,8 @@
         </div>
     </div>
 
-    <script src="C:\Users\Home\Desktop\Belinda\MMU\Degree\Degree Y2 Sem 3\Software Design\Project\reborn-thriftshop\reborn\rebornApp\migrations\static\javascript\script.js"></script>
+    {% block extra_js %}
+    <script src="{% static 'javascript/listings.js' %}"></script>
+    {% endblock %}
 </body>
 </html>
