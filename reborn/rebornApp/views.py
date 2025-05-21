@@ -12,6 +12,9 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from .models import Item
 from .models import Order
+from django.urls import path
+from . import views  
+
 
 
 
@@ -169,12 +172,12 @@ def buyer_dashboard(request):
         buyer_profile = request.user.buyer_profile
         buyer_orders = Order.objects.filter(buyer=buyer_profile).distinct()
 
-        total_spent = sum(order.total_price for order in buyer_orders if hasattr(order, 'total_price'))
+        total_spent = sum(order.total for order in buyer_orders)
 
         context = {
             'orders_count': buyer_orders.count(),
             'total_spent': total_spent,
-            'recent_orders': buyer_orders.order_by('-created_at')[:5],  # optional
+            'recent_orders': buyer_orders.order_by('-date')[:5], 
         }
 
         return render(request, 'buyer/dashboard.html', context)
