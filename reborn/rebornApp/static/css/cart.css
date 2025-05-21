@@ -1,0 +1,10 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f9f0;
+}
+
+.badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+}
