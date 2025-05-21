@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="p-4">
                         <div class="flex justify-between items-start">
                             <h3 class="text-lg font-semibold text-gray-900 mb-1">${listing.title}</h3>
-                            <span class="text-lg font-bold text-indigo-600">RM ${parseFloat(listing.price).toFixed(2)}</span>
+                            <span class="text-lg font-bold text-black">RM ${parseFloat(listing.price).toFixed(2)}</span>
                         </div>
                         <p class="text-gray-600 text-sm mb-4 line-clamp-2">${listing.description || 'No description provided'}</p>
                         <div class="flex justify-between items-center">

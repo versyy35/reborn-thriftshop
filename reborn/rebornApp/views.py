@@ -154,7 +154,5 @@ def seller_dashboard(request):
 @user_passes_test(is_seller)
 def listing_page(request):
     """Page for sellers to view and manage their listings"""
-    seller_profile = request.user.seller_profile
-    items = Item.objects.filter(seller=seller_profile)
 
-    return render(request, 'seller/listing-page.html', {'items': items})
+    return render(request, 'seller/listing-page.html')
