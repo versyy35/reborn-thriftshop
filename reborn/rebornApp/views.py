@@ -159,7 +159,26 @@ def listing_page(request):
 
     return render(request, 'seller/listing-page.html', {'items': items})
 
-@login_required
+def is_buyer(user):
+    return hasattr(user, 'buyer_profile')
+
+@user_passes_test(is_buyer)
 def buyer_dashboard(request):
-    orders = Order.objects.filter(email=request.user.email)  
-    return render(request, 'buyer-dashboard.html', {'orders': orders})
+    """Buyer dashboard view with statistics for logged-in buyer"""
+    try:
+        buyer_profile = request.user.buyer_profile
+        buyer_orders = Order.objects.filter(buyer=buyer_profile).distinct()
+
+        total_spent = sum(order.total_price for order in buyer_orders if hasattr(order, 'total_price'))
+
+        context = {
+            'orders_count': buyer_orders.count(),
+            'total_spent': total_spent,
+            'recent_orders': buyer_orders.order_by('-created_at')[:5],  # optional
+        }
+
+        return render(request, 'buyer/dashboard.html', context)
+
+    except AttributeError:
+        messages.error(request, "You don't have a buyer profile. Please contact admin.")
+        return redirect('home')

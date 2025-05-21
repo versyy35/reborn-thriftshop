@@ -43,5 +43,8 @@ urlpatterns = [
     path('seller/listing-page/', views.listing_page, name='listing_page'),
 
     path('dashboard/', views.buyer_dashboard, name='dashboard'),
+
+    path('buyer/dashboard/', views.buyer_dashboard, name='buyer_dashboard'),
+
 ]
 
