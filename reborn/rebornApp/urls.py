@@ -51,5 +51,10 @@ urlpatterns = [
     path('orders/', views.view_orders_view, name='view_orders'),
 
     path('', views.home, name='home'),
+
+    path('cart/', views.cart_view, name='cart_view'),
+
+    path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+
 ]
 
