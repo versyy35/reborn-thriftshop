@@ -42,13 +42,13 @@ urlpatterns = [
 
     path('seller/listing-page/', views.listing_page, name='listing_page'),
 
-    path('dashboard/', views.buyer_dashboard, name='dashboard'),
+    path('buyer/dashboard/', views.buyer_dashboard, name='dashboard'),
 
     path('profile/', views.profile_view, name='profile'),
 
-    path('orders/', views.orders_view, name='orders'),
+    path('orders/', views.view_orders, name='orders'),
 
-    path('cart/', views.cart_view, name='cart'),
+    path('cart/', views.view_cart, name='cart'),
 
 ]
 

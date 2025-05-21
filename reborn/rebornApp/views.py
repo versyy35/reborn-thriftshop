@@ -160,18 +160,24 @@ def listing_page(request):
 
     return render(request, 'seller/listing-page.html', {'items': items})
 
-@login_required
-def dashboard_view(request):
-    return render(request, 'dashboard.html')
 
 @login_required
-def profile_view(request):
-    return render(request, 'profile.html')
+def buyer_dashboard(request):
+    return render(request, 'buyer/dashboard.html')
+
 
 @login_required
-def orders_view(request):
-    return render(request, 'orders.html')
+def view_profile(request):
+    return render(request, 'buyer/profile.html')
+
 
 @login_required
-def cart_view(request):
-    return render(request, 'cart.html')
+def view_orders(request):
+    orders = Order.objects.filter(buyer=request.user.buyer_profile)
+    return render(request, 'buyer/orders.html', {'orders': orders})
+
+
+@login_required
+def view_cart(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+    return render(request, 'buyer/cart.html', {'cart_items': cart_items})
