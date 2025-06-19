@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Settings Manager - {{ settings.site_name }}{% endblock %}
+
+{% block content %}
+<!-- Load Settings Manager CSS -->
+<link rel="stylesheet" href="{% static 'css/settings-manager.css' %}">
+
+<div class="settings-container">
+    <div class="settings-header">
+        <h1 class="settings-title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="m19.4 15-1.5-2.7a2.3 2.3 0 0 1 0-2.6L19.4 7"/>
+                <path d="m4.6 9 1.5 2.7a2.3 2.3 0 0 1 0 2.6L4.6 17"/>
+                <path d="m9 4.6 2.7 1.5a2.3 2.3 0 0 1 2.6 0L17 4.6"/>
+                <path d="M15 19.4 12.3 17.9a2.3 2.3 0 0 1-2.6 0L7 19.4"/>
+            </svg>
+            Settings Manager
+        </h1>
+        <a href="{% url 'admin_dashboard' %}" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 19-7-7 7-7"/>
+                <path d="M19 12H5"/>
+            </svg>
+            Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ total_users }}</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ total_logs }}</div>
+            <div class="stat-label">Activity Logs</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{% if settings.maintenance_mode %}ON{% else %}OFF{% endif %}</div>
+            <div class="stat-label">Maintenance Mode</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ settings.updated_at|date:"M d" }}</div>
+            <div class="stat-label">Last Updated</div>
+        </div>
+    </div>
+
+    <div class="settings-grid">
+        <!-- Site Information -->
+        <div class="settings-card">
+            <h2 class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2H2v10l10-10z"/>
+                    <path d="M18 14v8h4v-8"/>
+                    <path d="M2 12v8h4v-8"/>
+                </svg>
+                Site Information
+            </h2>
+            
+            <form method="post" action="{% url 'update_site_info' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="site_name">Site Name</label>
+                    <input type="text" id="site_name" name="site_name" value="{{ settings.site_name }}" required>
+                    <small>The name of your thrift shop</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="site_description">Description</label>
+                    <textarea id="site_description" name="site_description" rows="3">{{ settings.site_description }}</textarea>
+                    <small>Brief description shown on your site</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact_email">Contact Email</label>
+                    <input type="email" id="contact_email" name="contact_email" value="{{ settings.contact_email }}" required>
+                    <small>Main contact email for customer support</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact_phone">Contact Phone</label>
+                    <input type="tel" id="contact_phone" name="contact_phone" value="{{ settings.contact_phone }}">
+                    <small>Optional phone number for contact</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact_address">Address</label>
+                    <textarea id="contact_address" name="contact_address" rows="2">{{ settings.contact_address }}</textarea>
+                    <small>Optional business address</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="site_logo">Site Logo</label>
+                    <input type="file" id="site_logo" name="site_logo" accept="image/*">
+                    {% if settings.site_logo %}
+                        <small>Current logo: <a href="{{ settings.site_logo.url }}" target="_blank">View Current Logo</a></small>
+                        <img src="{{ settings.site_logo.url }}" alt="Current logo" class="logo-preview">
+                    {% else %}
+                        <small>No logo uploaded yet. Recommended size: 200x60px</small>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    💾 Update Site Information
+                </button>
+            </form>
+        </div>
+
+        <!-- Maintenance Mode -->
+        <div class="settings-card">
+            <h2 class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                </svg>
+                Maintenance Mode
+            </h2>
+            
+            <div class="maintenance-status {% if settings.maintenance_mode %}maintenance-active{% else %}maintenance-inactive{% endif %}">
+                {% if settings.maintenance_mode %}
+                    <span>🔧</span>
+                    <div>
+                        <strong>Maintenance Mode is ACTIVE</strong>
+                        <div class="maintenance-details">
+                            Site is unavailable to public users
+                            {% if maintenance_duration %}
+                                <br>Active for: {{ maintenance_duration }}
+                            {% endif %}
+                            {% if settings.maintenance_estimated_end %}
+                                <br>Estimated end: {{ settings.maintenance_estimated_end|date:"M d, Y H:i" }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <span>✅</span>
+                    <div>
+                        <strong>Site is LIVE</strong>
+                        <div class="maintenance-details">All users can access the site normally</div>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <form method="post" action="{% url 'toggle_maintenance' %}" class="maintenance-form">
+                {% csrf_token %}
+                
+                {% if not settings.maintenance_mode %}
+                    <div class="form-group">
+                        <label for="maintenance_message">Maintenance Message</label>
+                        <textarea id="maintenance_message" name="maintenance_message" rows="3">{{ settings.maintenance_message }}</textarea>
+                        <small>Message shown to users during maintenance</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="estimated_end">Estimated End Time (Optional)</label>
+                        <input type="datetime-local" id="estimated_end" name="estimated_end" class="datetime-input">
+                        <small>When maintenance is expected to complete</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-warning">
+                        🔧 Enable Maintenance Mode
+                    </button>
+                {% else %}
+                    <button type="submit" class="btn btn-success">
+                        ✅ Disable Maintenance Mode
+                    </button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <!-- Recent Activity Logs -->
+    <div class="settings-card full-width-card">
+        <div class="logs-header">
+            <h2 class="card-title" style="margin: 0;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 3v18h18"/>
+                    <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+                </svg>
+                Recent Activity
+            </h2>
+            <a href="{% url 'activity_logs' %}" class="view-all-logs">
+                View All Logs
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m9 18 6-6-6-6"/>
+                </svg>
+            </a>
+        </div>
+
+        {% if recent_logs %}
+            <div class="logs-container">
+                {% for log in recent_logs %}
+                <div class="log-entry">
+                    <div class="log-message">
+                        <span class="level-{{ log.level }}">{{ log.get_level_display|upper }}</span>
+                        {{ log.message }}
+                        {% if log.user %}
+                            <small>by {{ log.user.username }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="log-time">{{ log.timestamp|date:"M d, H:i" }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 2rem; color: #666;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5; margin-bottom: 1rem;">
+                    <path d="M3 3v18h18"/>
+                    <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+                </svg>
+                <p>No activity logs yet. Start using the admin panel to see logs here.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+// Settings Manager JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-refresh stats every 30 seconds
+    setInterval(function() {
+        fetch('{% url "settings_api" %}')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Stats updated:', data);
+                // You can update the UI here if needed
+            })
+            .catch(error => console.log('Error updating stats:', error));
+    }, 30000);
+    
+    // Form submission feedback
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function() {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '⏳ Processing...';
+                
+                // Re-enable after 3 seconds in case of error
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }, 3000);
+            }
+        });
+    });
+    
+    // Logo preview functionality
+    const logoInput = document.getElementById('site_logo');
+    if (logoInput) {
+        logoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Remove existing preview
+                    const existingPreview = document.querySelector('.logo-preview');
+                    if (existingPreview) {
+                        existingPreview.remove();
+                    }
+                    
+                    // Create new preview
+                    const preview = document.createElement('img');
+                    preview.src = e.target.result;
+                    preview.className = 'logo-preview';
+                    preview.alt = 'Logo preview';
+                    logoInput.parentNode.appendChild(preview);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

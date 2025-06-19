@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Products{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Available Products</h2>
+    
+    <!-- Search Form -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form method="GET" class="d-flex">
+                <input type="text" name="search" class="form-control me-2" placeholder="Search products..." value="{{ search_query }}">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <a href="{% url 'product_detail' product.id %}">
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.title }}" style="height: 200px; object-fit: contain;">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title"><a href="{% url 'product_detail' product.id %}">{{ product.title }}</a></h5>
+                    <p class="card-text">
+                        <strong>Price:</strong> RM {{ product.price }}<br>
+                        <strong>Condition:</strong> {{ product.get_condition_display }}
+                    </p>
+                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <p>No products are available at the moment. Please check back later.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -2,7 +2,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
-from .models import User, Seller, Buyer, Item
+from .models import User, Seller, Buyer, Item, Rating
+from .factories import UserFactory
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(
@@ -36,15 +37,15 @@ class CustomUserCreationForm(UserCreationForm):
         return email
 
     def save(self, commit=True):
-        user = super().save(commit=False)
-        user.email = self.cleaned_data['email']
-        user.role = self.cleaned_data['role']
-        if commit:
-            user.save()
-            if user.role == 'seller':
-                Seller.objects.create(user=user)
-            else:
-                Buyer.objects.create(user=user)
+        if not commit:
+            raise NotImplementedError("Cannot create user with commit=False")
+
+        user = UserFactory.create_user(
+            role=self.cleaned_data['role'],
+            username=self.cleaned_data['username'],
+            email=self.cleaned_data['email'],
+            password=self.cleaned_data['password2']
+        )
         return user
 
 class CustomAuthenticationForm(AuthenticationForm):
@@ -64,7 +65,7 @@ class CustomAuthenticationForm(AuthenticationForm):
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ['title', 'description', 'price', 'condition', 'image', 'category']
+        fields = ['title', 'description', 'price', 'condition', 'image']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -77,14 +78,15 @@ class ItemForm(forms.ModelForm):
             }),
             'price': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Price in USD'
+                'placeholder': 'Price in Malaysia Ringgit'
             }),
             'condition': forms.Select(attrs={
                 'class': 'form-control'
             }),
-            'category': forms.Select(attrs={
-                'class': 'form-control'
-            }),
+            'image': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            })
         }
 
     def clean_price(self):
@@ -110,5 +112,53 @@ class SellerProfileForm(forms.ModelForm):
                 'class': 'form-control',
                 'rows': 3,
                 'placeholder': 'Tell buyers about yourself...'
+            }),
+        }
+
+class CheckoutForm(forms.Form):
+    """
+    Form for collecting shipping and payment information during checkout.
+    """
+    PAYMENT_CHOICES = (
+        ('credit_card', 'Credit Card'),
+        ('paypal', 'PayPal'),
+    )
+    shipping_address = forms.CharField(widget=forms.Textarea(attrs={
+        'class': 'form-control',
+        'rows': 3,
+        'placeholder': 'Your shipping address'
+    }))
+    payment_method = forms.ChoiceField(choices=PAYMENT_CHOICES, widget=forms.RadioSelect)
+    
+    credit_card_number = forms.CharField(max_length=16, required=False, widget=forms.TextInput(attrs={'placeholder': '16-digit card number'}))
+    paypal_email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={'placeholder': 'your@paypal.email'}))
+
+    def clean(self):
+        cleaned_data = super().clean()
+        payment_method = cleaned_data.get("payment_method")
+
+        if payment_method == 'credit_card' and not cleaned_data.get('credit_card_number'):
+            self.add_error('credit_card_number', 'This field is required for credit card payments.')
+        
+        if payment_method == 'paypal' and not cleaned_data.get('paypal_email'):
+            self.add_error('paypal_email', 'This field is required for PayPal payments.')
+
+        return cleaned_data
+
+class RatingForm(forms.ModelForm):
+    """
+    Form for a buyer to rate a seller for a specific order.
+    """
+    class Meta:
+        model = Rating
+        fields = ['score', 'comment']
+        widgets = {
+            'score': forms.Select(choices=[(i, f'{i} Stars') for i in range(1, 6)], attrs={
+                'class': 'form-control'
+            }),
+            'comment': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Leave a comment (optional)'
             }),
         }

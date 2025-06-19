@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders | Seller{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">My Orders</h2>
+    {% for order in orders %}
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Order #{{ order.id }}</h5>
+                <span class="badge bg-{% if order.status == 'pending' %}warning{% elif order.status == 'shipped' %}info{% elif order.status == 'delivered' %}success{% else %}secondary{% endif %}">
+                    {{ order.get_status_display }}
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <p><strong>Buyer:</strong> {{ order.buyer.user.username }}</p>
+                        <p><strong>Order Date:</strong> {{ order.date|date:"F d, Y" }}</p>
+                        <p><strong>Total Amount:</strong> RM {{ order.total }}</p>
+                        <p><strong>Shipping Address:</strong><br>{{ order.shipping_address|linebreaks }}</p>
+                        
+                        <h6 class="mt-3">Items:</h6>
+                        <ul class="list-group list-group-flush">
+                            {% for order_item in order.items.all %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ order_item.item.title }}</strong><br>
+                                        <small class="text-muted">Condition: {{ order_item.item.get_condition_display }}</small>
+                                    </div>
+                                    <span class="badge bg-primary rounded-pill">RM {{ order_item.price }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Update Order Status</h6>
+                        <form method="POST" action="{% url 'update_order_status' order.id %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <select name="status" class="form-select" id="status-{{ order.id }}">
+                                    <option value="">Select new status...</option>
+                                    {% if order.status == 'pending' %}
+                                        <option value="shipped">Mark as Shipped</option>
+                                        <option value="cancelled">Cancel Order</option>
+                                    {% elif order.status == 'shipped' %}
+                                        <option value="delivered">Mark as Delivered</option>
+                                        <option value="cancelled">Cancel Order</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                            {% if order.status != 'delivered' and order.status != 'cancelled' %}
+                                <button type="submit" class="btn btn-primary btn-sm">Update Status</button>
+                            {% endif %}
+                        </form>
+                        
+                        {% if order.status == 'delivered' %}
+                            {% if order.rating %}
+                                <div class="mt-3">
+                                    <h6>Customer Rating</h6>
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-warning">
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= order.rating.score %}★{% else %}☆{% endif %}
+                                            {% endfor %}
+                                        </span>
+                                        <span class="ms-2">{{ order.rating.score }}/5</span>
+                                    </div>
+                                    {% if order.rating.comment %}
+                                        <p class="mt-2 text-muted"><em>"{{ order.rating.comment }}"</em></p>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <div class="mt-3">
+                                    <small class="text-muted">Customer hasn't rated this order yet</small>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="text-center py-5">
+            <h4 class="text-muted">No Orders Yet</h4>
+            <p class="text-muted">You haven't received any orders yet. Keep promoting your items!</p>
+            <a href="{% url 'listing_page' %}" class="btn btn-primary">Manage Your Listings</a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

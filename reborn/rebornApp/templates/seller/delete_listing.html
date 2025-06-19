@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Confirm Deletion{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Confirm Deletion</h4>
+        </div>
+        <div class="card-body">
+            <h5>Are you sure you want to delete "{{ item.title }}"?</h5>
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" class="img-fluid rounded" alt="{{ item.title }}">
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <p><strong>Price:</strong> RM {{ item.price }}</p>
+                    <p><strong>Status:</strong> <span class="badge bg-{% if item.status == 'available' %}success{% else %}secondary{% endif %}">{{ item.get_status_display }}</span></p>
+                    <p><strong>Created:</strong> {{ item.created_at|date:"F d, Y" }}</p>
+                </div>
+            </div>
+            
+            <div class="alert alert-warning mt-3">
+                <strong>Warning:</strong> This action cannot be undone. Once deleted, all item information will be permanently removed.
+            </div>
+            
+            {% if not item.can_be_deleted %}
+            <div class="alert alert-danger">
+                <strong>Error:</strong> This item cannot be deleted because it's part of existing orders. Items that have been ordered must be preserved for order history.
+            </div>
+            {% endif %}
+            
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                {% if item.can_be_deleted %}
+                    <button type="submit" class="btn btn-danger me-2">
+                        <i class="fas fa-trash"></i> Yes, Delete This Item
+                    </button>
+                {% else %}
+                    <button type="button" class="btn btn-danger me-2" disabled>
+                        <i class="fas fa-lock"></i> Cannot Delete
+                    </button>
+                {% endif %}
+                <a href="{% url 'listing_page' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

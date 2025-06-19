@@ -1,42 +1,29 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block title %}Reborn - Second Hand Clothing{% endblock %}
 
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/landingPage.css' %}">
-{% endblock %}
-
-{% block auth_content %}
-<div class="landing-container">
-    <div class="landing-header">
-        <h1>Reborn</h1>
-        <p class="tagline">Give your clothes a second life</p>
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Give Your Clothes a Second Life</h1>
+        <p class="col-md-8 fs-4">Welcome to Reborn! Discover preloved fashion treasures at affordable prices. Our curated collection of second-hand clothing helps you refresh your wardrobe while reducing environmental impact.</p>
+        <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg" type="button">Start Shopping</a>
     </div>
+</div>
 
-    <div class="landing-content">
-        <div class="landing-description">
-            <h2>Welcome to Reborn</h2>
-            <p>Discover preloved fashion treasures at affordable prices. Our curated collection of second-hand clothing helps you refresh your wardrobe while reducing environmental impact.</p>
-        </div>
-
-        <div class="auth-options">
-            <div class="auth-card">
-                <h3>Join Our Community</h3>
-                <p>Create an account to start shopping!</p>
-                <a href="{% url 'register' %}" class="btn btn-primary">Register Now</a>
-            </div>
-            
-            <div class="auth-card">
-                <h3>Already a Member?</h3>
-                <p>Sign in to your account to access your dashboard, view past orders, and continue shopping.</p>
-                <a href="{% url 'login' %}" class="btn btn-secondary">Log In</a>
-            </div>
+<div class="row align-items-md-stretch">
+    <div class="col-md-6">
+        <div class="h-100 p-5 text-white bg-dark rounded-3">
+            <h2>Become a Seller</h2>
+            <p>Have clothes you don't wear anymore? Join our community of sellers and turn your closet into cash. Listing is easy and free!</p>
+            <a href="{% url 'register' %}" class="btn btn-outline-light" type="button">Register Now</a>
         </div>
     </div>
-
-    <div class="landing-footer">
-        <p>Reborn © {% now "Y" %} | Sustainable Fashion For Everyone</p>
+    <div class="col-md-6">
+        <div class="h-100 p-5 bg-light border rounded-3">
+            <h2>Why Thrift?</h2>
+            <p>Thrifting is not just about finding unique pieces at great prices. It's a sustainable choice that helps reduce textile waste and promotes a circular fashion economy. Every purchase makes a difference!</p>
+        </div>
     </div>
 </div>
 {% endblock %}

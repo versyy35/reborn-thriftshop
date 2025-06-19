@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Logged Out | Reborn{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h2 class="card-title">You have been logged out.</h2>
+                <p class="card-text">Thank you for visiting. Come back soon!</p>
+                <hr>
+                <a href="{% url 'login' %}" class="btn btn-primary">Log In Again</a>
+                <a href="{% url 'home' %}" class="btn btn-secondary">Go to Homepage</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

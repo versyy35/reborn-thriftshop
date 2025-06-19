@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Rate Seller for Order #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Rate your transaction with {{ order.seller.store_name|default:order.seller.user.username }}</h2>
+    <p>Order #{{ order.id }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit Rating</button>
+    </form>
+</div>
+{% endblock %}
