@@ -86,6 +86,11 @@
                                         <i class="fas fa-plus"></i> Add Listing
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'seller_orders' %}">
+                                        <i class="fas fa-file-invoice"></i> View Orders
+                                    </a>
+                                </li>
                             {% elif user.role == 'admin' %}
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'admin_dashboard' %}">
