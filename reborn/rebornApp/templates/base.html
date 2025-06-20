@@ -1,127 +1,313 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Reborn Thriftshop{% endblock %}</title>
+    <title>{% block title %}{% if site_settings.site_name %}{{ site_settings.site_name }}{% else %}Reborn Thrift Shop{% endif %}{% endblock %}</title>
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Optional: Add your custom CSS file here -->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Block for page-specific CSS -->
-    {% block extra_css %}
-    {% endblock %}
+    <!-- Custom CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            {% if user.is_authenticated %}
-                {% if user.role == 'admin' %}
-                <a class="navbar-brand" href="{% url 'admin_dashboard' %}">Reborn Admin</a>
-                {% elif user.is_seller %}
-                <a class="navbar-brand" href="{% url 'seller_dashboard' %}">Reborn</a>
-                {% elif user.is_buyer %}
-                <a class="navbar-brand" href="{% url 'product_list' %}">Reborn</a>
-                {% endif %}          
-            {% else %}
-            <a class="navbar-brand" href="{% url 'home' %}">Reborn</a>
-            {% endif %}
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    {% if user.is_authenticated %}
-                        {% if user.role == 'admin' %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'admin_dashboard' %}">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'user_management' %}">Manage Users</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'admin_items' %}">Manage Items</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'simple_settings' %}">System Settings</a>
-                        </li>
-                        {% elif user.is_seller %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'seller_dashboard' %}">Seller Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'listing_page' %}">My Listings</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'seller_orders' %}">My Orders</a>
-                        </li>
-                        {% elif user.is_buyer %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'product_list' %}">Browse Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'order_history' %}">My Orders</a>
-                        </li>
-                        {% endif %}
-                    {% endif %}
-                </ul>
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
-                        {% if user.is_buyer %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'view_cart' %}">Cart</a>
-                        </li>
-                        {% endif %}
-                        <!-- Show current user role as badge -->
-                        <li class="nav-item">
-                            <span class="navbar-text me-2">
-                                <span class="badge bg-secondary">{{ user.role|capfirst }}</span>
-                            </span>
-                        </li>
-                        <li class="nav-item">
-                            <form method="post" action="{% url 'logout' %}" id="logout-form" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="nav-link btn btn-link">Logout</button>
-                            </form>
-                        </li>
+    <div class="wrapper">
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <!-- Brand/Logo -->
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    {% if site_settings and site_settings.site_logo %}
+                        <img src="{{ site_settings.site_logo.url }}" alt="{% if site_settings.site_name %}{{ site_settings.site_name }}{% else %}Reborn Thrift Shop{% endif %} Logo">
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-primary text-white" href="{% url 'register' %}">Register</a>
-                        </li>
+                        <!-- Fallback logo if no image is uploaded -->
+                        <div class="logo-placeholder">
+                            {% if site_settings.site_name %}
+                                {{ site_settings.site_name|slice:':2'|upper }}
+                            {% else %}
+                                RT
+                            {% endif %}
+                        </div>
                     {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
+                    <span>
+                        {% if site_settings and site_settings.site_name %}
+                            {{ site_settings.site_name }}
+                        {% else %}
+                            Reborn Thrift Shop
+                        {% endif %}
+                    </span>
+                </a>
 
-    <main class="container mt-4">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <!-- Mobile toggle button -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Navigation Menu -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'home' %}">
+                                <i class="fas fa-home"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'product_list' %}">
+                                <i class="fas fa-shopping-bag"></i> Shop
+                            </a>
+                        </li>
+                        {% if user.is_authenticated %}
+                            {% if user.role == 'buyer' %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'view_cart' %}">
+                                        <i class="fas fa-shopping-cart"></i> Cart
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'order_history' %}">
+                                        <i class="fas fa-history"></i> Orders
+                                    </a>
+                                </li>
+                            {% elif user.role == 'seller' %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'seller_dashboard' %}">
+                                        <i class="fas fa-store"></i> Dashboard
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'create_listing' %}">
+                                        <i class="fas fa-plus"></i> Add Listing
+                                    </a>
+                                </li>
+                            {% elif user.role == 'admin' %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'admin_dashboard' %}">
+                                        <i class="fas fa-cog"></i> Admin
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+
+                    <!-- User Menu -->
+                    <ul class="navbar-nav">
+                        {% if user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user"></i> {{ user.username }}
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'profile' %}">
+                                        <i class="fas fa-user-circle"></i> Profile
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form method="post" action="{% url 'logout' %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="dropdown-item">
+                                                <i class="fas fa-sign-out-alt"></i> Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">
+                                    <i class="fas fa-sign-in-alt"></i> Login
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'register' %}">
+                                    <i class="fas fa-user-plus"></i> Register
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
                 </div>
-            {% endfor %}
-        {% endif %}
+            </div>
+        </nav>
 
-        {% block content %}
-        <!-- Page-specific content will go here -->
-        {% endblock %}
-    </main>
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Messages -->
+            {% if messages %}
+                <div class="container mt-3">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {% if message.tags == 'error' %}
+                                <i class="fas fa-exclamation-triangle"></i>
+                            {% elif message.tags == 'success' %}
+                                <i class="fas fa-check-circle"></i>
+                            {% elif message.tags == 'warning' %}
+                                <i class="fas fa-exclamation-circle"></i>
+                            {% else %}
+                                <i class="fas fa-info-circle"></i>
+                            {% endif %}
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
 
-    <footer class="text-center mt-5 py-3 bg-light">
-        <p>&copy; {% now "Y" %} Reborn Thriftshop. All Rights Reserved.</p>
-    </footer>
+            <!-- Debug Info (remove this after fixing) -->
+            {% if debug %}
+                <div class="container mt-2">
+                    <div class="alert alert-info">
+                        <strong>Debug:</strong> 
+                        site_settings: {{ site_settings|default:"None" }} | 
+                        site_name: {{ site_name|default:"None" }} | 
+                        request.get_host: {{ request.get_host }}
+                    </div>
+                </div>
+            {% endif %}
 
-    <!-- Bootstrap JS Bundle -->
+            <!-- Page Content -->
+            {% block content %}{% endblock %}
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <!-- About Section -->
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h5>
+                                <i class="fas fa-recycle"></i> 
+                                {% if site_settings and site_settings.site_name %}
+                                    {{ site_settings.site_name }}
+                                {% else %}
+                                    Reborn Thrift Shop
+                                {% endif %}
+                            </h5>
+                            <p class="mb-3">
+                                {% if site_settings and site_settings.site_description %}
+                                    {{ site_settings.site_description }}
+                                {% else %}
+                                    Your sustainable fashion destination. Give clothes a second life and help save the planet, one purchase at a time.
+                                {% endif %}
+                            </p>
+                            <div class="social-links">
+                                <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                                <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h5>Quick Links</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="{% url 'home' %}">Home</a></li>
+                                <li><a href="{% url 'product_list' %}">Shop</a></li>
+                                {% if user.is_authenticated %}
+                                    <li><a href="{% url 'profile' %}">My Account</a></li>
+                                {% else %}
+                                    <li><a href="{% url 'register' %}">Join Us</a></li>
+                                {% endif %}
+                                <li><a href="#about">About Us</a></li>
+                                <li><a href="#faq">FAQ</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Help & Support -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h5>Help & Support</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="#shipping">Shipping Info</a></li>
+                                <li><a href="#returns">Returns</a></li>
+                                <li><a href="#size-guide">Size Guide</a></li>
+                                <li><a href="#care-tips">Care Tips</a></li>
+                                <li><a href="#sustainability">Sustainability</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h5>Contact Us</h5>
+                            
+                            {% if site_settings and site_settings.contact_email %}
+                                <div class="footer-contact-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <a href="mailto:{{ site_settings.contact_email }}">{{ site_settings.contact_email }}</a>
+                                </div>
+                            {% endif %}
+                            
+                            {% if site_settings and site_settings.contact_phone %}
+                                <div class="footer-contact-item">
+                                    <i class="fas fa-phone"></i>
+                                    <a href="tel:{{ site_settings.contact_phone }}">{{ site_settings.contact_phone }}</a>
+                                </div>
+                            {% endif %}
+                            
+                            {% if site_settings and site_settings.contact_address %}
+                                <div class="footer-contact-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>{{ site_settings.contact_address }}</span>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Fallback contact info if settings are empty -->
+                            {% if not site_settings.contact_email and not site_settings.contact_phone %}
+                                <div class="footer-contact-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <a href="mailto:help@rebornthrift.com">help@rebornthrift.com</a>
+                                </div>
+                                <div class="footer-contact-item">
+                                    <i class="fas fa-phone"></i>
+                                    <a href="tel:+1234567890">+1 (234) 567-890</a>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="footer-contact-item mt-3">
+                                <i class="fas fa-clock"></i>
+                                <span>Support: Mon-Fri 9AM-6PM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Footer -->
+                <hr class="my-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="mb-0">&copy; {% now "Y" %} 
+                            {% if site_settings and site_settings.site_name %}
+                                {{ site_settings.site_name }}
+                            {% else %}
+                                Reborn Thrift Shop
+                            {% endif %}. All rights reserved.
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="#privacy">Privacy Policy</a>
+                        <a href="#terms">Terms of Service</a>
+                        <a href="#cookies">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

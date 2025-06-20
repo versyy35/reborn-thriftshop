@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Login | Reborn{% endblock %}
 
@@ -47,4 +48,16 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<script>
+    // Quick JavaScript fix to ensure navbar shows correctly
+    document.addEventListener('DOMContentLoaded', function() {
+        const navbarBrand = document.querySelector('.navbar-brand span');
+        if (navbarBrand && navbarBrand.textContent.includes('localhost')) {
+            navbarBrand.textContent = 'Reborn Thrift Shop';
+        }
+    });
+</script>
 {% endblock %}

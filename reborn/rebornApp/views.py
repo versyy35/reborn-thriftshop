@@ -2,6 +2,7 @@
 
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.contrib.auth import login
+from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
@@ -12,6 +13,8 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.db.models import Q, Count
 from django.utils import timezone
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
 import datetime
 
 # Import your models
@@ -54,6 +57,28 @@ def register(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'auth/register.html', {'form': form})
+
+class CustomLoginView(LoginView):
+    template_name = 'auth/login.html'
+    success_url = reverse_lazy('home')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Ensure settings context is available
+        from .models import SiteSettings
+        settings = SiteSettings.get_settings()
+        context.update({
+            'site_settings': settings,
+            'site_name': settings.site_name,
+            'contact_email': settings.contact_email,
+            'maintenance_mode': settings.maintenance_mode,
+        })
+        return context
+
+def custom_logout(request):
+    logout(request)
+    messages.success(request, "You have been logged out successfully.")
+    return redirect('home')
 
 
 def is_seller(user):
@@ -127,7 +152,6 @@ def delete_listing(request, item_id):
             messages.error(request, str(e))
             return redirect('listing_page')
     return render(request, 'seller/delete_listing.html', {'item': item})
-
 
 def product_list(request):
     search_query = request.GET.get('search', '')

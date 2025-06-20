@@ -6,6 +6,12 @@ from .models import User, Seller, Buyer, Item, Rating
 from .factories import UserFactory
 
 class CustomUserCreationForm(UserCreationForm):
+    # Define registration role choices (excluding admin)
+    REGISTRATION_ROLE_CHOICES = (
+        ('buyer', 'Buyer'),
+        ('seller', 'Seller'),
+    )
+    
     email = forms.EmailField(
         required=True,
         widget=forms.EmailInput(attrs={
@@ -14,7 +20,7 @@ class CustomUserCreationForm(UserCreationForm):
         })
     )
     role = forms.ChoiceField(
-        choices=User.USER_ROLES,
+        choices=REGISTRATION_ROLE_CHOICES,  # Changed from User.USER_ROLES to filtered choices
         widget=forms.Select(attrs={
             'class': 'form-control'
         })
@@ -35,6 +41,13 @@ class CustomUserCreationForm(UserCreationForm):
         if User.objects.filter(email__iexact=email).exists():
             raise ValidationError("This email is already in use.")
         return email
+
+    def clean_role(self):
+        """Prevent admin registration even if form is tampered with"""
+        role = self.cleaned_data.get('role')
+        if role == 'admin':
+            raise ValidationError("Admin registration is not allowed through this form.")
+        return role
 
     def save(self, commit=True):
         if not commit:

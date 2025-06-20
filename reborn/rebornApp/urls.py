@@ -9,6 +9,7 @@ urlpatterns = [
     path('', views.home, name = 'home'),
     path('login/', auth_views.LoginView.as_view(template_name='auth/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='auth/logged_out.html'), name='logout'),
+    path('logout/', views.custom_logout, name='logout'),
     path('register/', views.register, name='register'),
     # Password Reset URLs
     path('password_reset/', 
@@ -38,6 +39,7 @@ urlpatterns = [
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('admin-users/', views.user_management, name='user_management'),
     path('admin-items/', views.admin_items, name='admin_items'),
+    path('admin/settings/logs/', views.activity_logs, name='activity_logs'),
     path('admin-items/<int:item_id>/approve/', views.approve_item, name='approve_item'),
     path('admin-items/<int:item_id>/reject/', views.reject_item, name='reject_item'),
     path('admin-items/<int:item_id>/delete/', views.admin_delete_item, name='admin_delete_item'),
