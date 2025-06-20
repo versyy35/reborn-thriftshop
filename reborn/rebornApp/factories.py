@@ -2,15 +2,15 @@ from .models import User, Seller, Buyer, Admin
 
 class UserFactory:
     """
-    A factory for creating users with different roles (Seller, Buyer).
+    A factory for creating users with different roles (Seller, Buyer, Admin).
     This encapsulates the object creation logic.
     """
     @staticmethod
     def create_user(role, **kwargs):
         """
-        Creates a user and their corresponding profile (Seller or Buyer).
+        Creates a user and their corresponding profile (Seller, Buyer or Admin).
         
-        :param role: The role of the user to create ('seller' or 'buyer').
+        :param role: The role of the user to create ('seller', 'buyer' or 'admin').
         :param kwargs: The fields for the User model (e.g., username, password, email).
         :return: The created User object.
         :raises ValueError: If the role is invalid.
